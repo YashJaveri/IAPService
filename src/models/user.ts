@@ -6,8 +6,8 @@ export interface IUser extends Document{
     phoneNumber?: string,
     passwordHash: string,
     passwordSalt: string,
+    apikey: string,
     numberOfRequests: number,    
     previousPaidDate: string,  
     disabled: boolean
 }
-
