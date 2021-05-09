@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { VerifyUserToken } from '../middlewares/auth';
 import { AuthRoutes } from './auth';
-import { VerifiRoutes } from './VerifyRoute';
+import { VerifiRoutes } from './verify-route';
 
 export const Routes = Router()
 

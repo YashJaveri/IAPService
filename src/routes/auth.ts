@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import ErrorProtectedRoute from '../utils/error-protected-route'
-import { ProfileRoutes } from './ProfileRoutes'
+import { ProfileRoutes } from './profile-routes'
 
 export const AuthRoutes = Router()
 
