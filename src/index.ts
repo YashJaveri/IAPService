@@ -29,8 +29,7 @@ app.use((err: Error | ApiError, req: Request, res: Response, next: NextFunction)
 
 const server = http.createServer(app);
 
-
-mongoose.connect("", {
+mongoose.connect("mongodb://127.0.0.1:27017/IAPService", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true

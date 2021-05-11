@@ -8,7 +8,7 @@ export interface IUser extends Document{
     apikey?: string,    
     billingEnabled?: boolean,
     disabled?: boolean,
-    googleConfig?: {},
+    googleConfig?: {},  //To Do
     appleConfig?: {
         secret: string
     },
@@ -20,22 +20,29 @@ export interface IUser extends Document{
 
 export const UserSchema = new Schema<IUser>({
     firebaseId: { type: String, require: [true, "Firebase id is required"]},
-    name: { type: String },
+    name: { type: String, default: "" },
     email: { type: String, require: [true, "Email is required"] },
-    phoneNumber: { type: String, unique: true },
-    apikey: { type: String },
-    billingEnabled: { type: Boolean },
-    disabled: { type: Boolean },
-    googleConfig: { type: {} },
+    phoneNumber: { type: String, unique: true, default: "" },
+    apikey: { type: String, default: "" },
+    billingEnabled: { type: Boolean, default: false },
+    disabled: { type: Boolean, default: false },
+    googleConfig: { type: {}, default: null },
     appleConfig: { 
         type: {
-            secret: { type: String }
-        }
+            secret: { type: String, default: "" }
+        },
+        default: {            
+            secret: ""
+        } 
     },
     amazonConfig: { 
         type: {
-            userId: { type: String },
-            secret: { type: String }
+            userId: { type: String, default: "" },
+            secret: { type: String, default: ""}
+        },
+        default: {
+            userId: "",
+            secret: ""
         }
     }
 })
