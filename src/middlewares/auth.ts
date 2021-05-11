@@ -24,7 +24,7 @@ export function VerifyUserToken() {
                 next()
             })
             .catch((err) => {
-                throw new ApiError('user-not-found', 404, "User not found!")    //DOUBT
+                throw new ApiError('user-not-found', 404, "User not found!")
             })
         } else {
             throw new ApiError('invalid-jwt', 401, "Invalid jwt")
