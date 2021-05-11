@@ -3,7 +3,7 @@ import ApiError from "./api-error";
 
 export default function ErrorProtectedRoute(fn: (req: Request, res: Response,next: NextFunction) => Promise<any>) {
     return (req: Request, res: Response, next: NextFunction) => {
-        (async () => {
+        (async () => {                                                       //WHY ASYNC?
             await fn(req, res,next)
         })().catch((err) => {
             if(err.name === "ApiError"){

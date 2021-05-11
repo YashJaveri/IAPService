@@ -15,7 +15,7 @@ admin.initializeApp({
 });
 
 
-app.use(cors());
+app.use(cors()); //AK doubt
 app.use(BodyParser);
 app.use(Routes);
 app.use((err: Error | ApiError, req: Request, res: Response, next: NextFunction) => {
