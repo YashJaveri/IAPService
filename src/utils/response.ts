@@ -9,7 +9,7 @@ export class ResponseData{
         this.resultCode = resultCode        
     }
     
-    toJSON() { 
+    toJSON() {         
         return {
             data: this.data,
             message: this.message,

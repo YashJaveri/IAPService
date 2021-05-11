@@ -14,7 +14,6 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 
-
 app.use(cors());
 app.use(BodyParser);
 app.use(Routes);
@@ -28,7 +27,6 @@ app.use((err: Error | ApiError, req: Request, res: Response, next: NextFunction)
 })
 
 const server = http.createServer(app);
-
 
 mongoose.connect("mongodb://127.0.0.1:27017/IAPService", {
     useNewUrlParser: true,
