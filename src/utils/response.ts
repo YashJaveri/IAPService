@@ -8,7 +8,8 @@ export class ResponseData{
         this.message = message
         this.resultCode = resultCode        
     }
-    toResponseData() { 
+    
+    toJSON() { 
         return {
             data: this.data,
             message: this.message,
