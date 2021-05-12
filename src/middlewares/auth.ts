@@ -28,7 +28,8 @@ export function VerifyUserToken() {
                     })
                 }
                 else {
-                    req.user = await UserModel.findOne({ firebaseId: uid })   //Better way?                    
+                    //req.user = await UserModel.findOne({ firebaseId: uid })   //Better way?                    
+                    req.user = user
                     next()
                 }
             })
