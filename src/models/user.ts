@@ -5,7 +5,7 @@ export interface IUser extends Document{
     name?: string,
     email: string,
     phoneNumber?: string,    
-    apikey?: string,    
+    apiKey?: string,    
     billingEnabled?: boolean,
     disabled?: boolean,
     googleConfig?: {},  //To Do
@@ -23,7 +23,7 @@ export const UserSchema = new Schema<IUser>({
     name: { type: String, default: "" },
     email: { type: String, require: [true, "Email is required"] },
     phoneNumber: { type: String, unique: true, default: "" },
-    apikey: { type: String, default: "" },
+    apiKey: { type: String, default: "" },
     billingEnabled: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
     googleConfig: { type: {}, default: null },

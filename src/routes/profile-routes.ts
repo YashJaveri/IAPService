@@ -1,10 +1,12 @@
 import { Router } from 'express'
-import { UserModel } from '../models/user'
+import { VerifyUserToken } from '../middlewares/auth'
 import ApiError from '../utils/api-error'
 import ErrorProtectedRoute from '../utils/error-protected-route'
 import { ResponseData } from '../utils/response'
 
 export const ProfileRoutes = Router()
+
+ProfileRoutes.use(VerifyUserToken())   //Auth custom middleware
 
 ProfileRoutes.post('/', ErrorProtectedRoute( async (req: any, resp) => {    
     Object.assign(req.user, req.body)    
