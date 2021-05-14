@@ -1,5 +1,5 @@
 const admin = require('firebase-admin')
-const uid = 'L2MLLi3j9UNs1lyucyttCHPnXOk1';
+
 const serviceAccount = require("./firebase/iapservice-firebase-adminsdk-q0hwn-a359781f99.json");
 
 admin.initializeApp({
@@ -16,7 +16,7 @@ admin.initializeApp({
     console.log('Error creating custom token:', error);
 });*/
 
-/*var firebase = require('firebase');
+var firebase = require('firebase');
 
 var app = firebase.initializeApp({
   apiKey: "AIzaSyCyJYky_CJD3xlYyYE6TJQrpfNJEuxe-fQ",
@@ -28,7 +28,8 @@ var app = firebase.initializeApp({
   measurementId: "G-4NJRKDKHG9"
 });
 
-firebase.auth().signInWithEmailAndPassword("yjaveri99@gmail.com", "IAPServiceTest")
+
+firebase.auth().signInWithEmailAndPassword("aditkalyani@gmail.com", "pass@123")
   .then(async (userCredential) => {
     // Signed in
     var user = userCredential.user;
@@ -39,4 +40,4 @@ firebase.auth().signInWithEmailAndPassword("yjaveri99@gmail.com", "IAPServiceTes
     console.log(error.message)
     var errorCode = error.code;
     var errorMessage = error.message;
-  });*/
+  });

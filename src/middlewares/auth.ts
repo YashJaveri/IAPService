@@ -17,7 +17,7 @@ export function VerifyUserToken() {
                     let user = {
                         firebaseId: uid,
                         email: resp.email,
-                        apiKey: createApiKey()
+                        apiKey: createApiKey().apiKey
                     }
                     UserModel.create(user, (err, resp) => {
                         if (err)
@@ -36,10 +36,10 @@ export function VerifyUserToken() {
                 }
             })
             .catch((err) => {                
-                throw new ApiError('user-not-found', 404, "User not found!")
+                throw new ApiError('user-not-found', "User not found!", 404)
             })
         } else {
-            throw new ApiError('invalid-jwt', 401, "Invalid jwt")
+            throw new ApiError('invalid-jwt', "Invalid jwt", 401)
         }
     })
 }

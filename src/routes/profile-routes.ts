@@ -19,7 +19,7 @@ ProfileRoutes.post('/', ErrorProtectedRoute( async (req: any, resp) => {
     }
     catch(err){
         console.log(err)
-        throw new ApiError("unknown-error", 400, err.message)   //check all possible error types and change the result code accordingly/do this on client side
+        throw new ApiError("unknown-error", err.message, 400)   //check all possible error types and change the result code accordingly/do this on client side
     }
 }))
 

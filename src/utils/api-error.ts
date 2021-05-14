@@ -4,7 +4,7 @@ export default class ApiError{
     responseCode: number = 400
     name: string
 
-    constructor(resultCode: string, responseCode: number = 400, message?: string) {
+    constructor(resultCode: string, message?: string, responseCode: number = 400) {
         this.message = message
         this.resultCode = resultCode
         this.responseCode = responseCode
