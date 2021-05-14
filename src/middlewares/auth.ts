@@ -2,6 +2,7 @@ import ApiError from "../utils/api-error";
 import ErrorProtectedRoute from "../utils/error-protected-route";
 import * as admin from "firebase-admin";
 import { UserModel } from "../models/user";
+import { createApiKey } from "../utils/api-key";
 
 export function VerifyUserToken() {
     return ErrorProtectedRoute(async (req: any, res, next) => {
@@ -15,7 +16,8 @@ export function VerifyUserToken() {
                     console.log("User not found hence creating")
                     let user = {
                         firebaseId: uid,
-                        email: resp.email
+                        email: resp.email,
+                        apiKey: createApiKey().apiKey
                     }
                     UserModel.create(user, (err, resp) => {
                         if (err)
@@ -28,15 +30,16 @@ export function VerifyUserToken() {
                     })
                 }
                 else {
-                    req.user = await UserModel.findOne({ firebaseId: uid })   //Better way?                    
+                    //req.user = await UserModel.findOne({ firebaseId: uid })   //Better way?                    
+                    req.user = user
                     next()
                 }
             })
             .catch((err) => {                
-                throw new ApiError('user-not-found', 404, "User not found!")
+                throw new ApiError('user-not-found', "User not found!", 404)
             })
         } else {
-            throw new ApiError('invalid-jwt', 401, "Invalid jwt")
+            throw new ApiError('invalid-jwt', "Invalid jwt", 401)
         }
     })
 }

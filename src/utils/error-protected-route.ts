@@ -10,7 +10,7 @@ export default function ErrorProtectedRoute(fn: (req: Request, res: Response,nex
                 next(err)
             }
             else{
-                let error = new ApiError("unknown-error", 500, err.message)
+                let error = new ApiError("unknown-error", err.message, 500 )
                 next(error)
             }
         })
