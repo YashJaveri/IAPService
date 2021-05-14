@@ -3,6 +3,7 @@ import ErrorProtectedRoute from "../utils/error-protected-route";
 import * as admin from "firebase-admin";
 import { UserModel } from "../models/user";
 import { createApiKey } from "../utils/api-key";
+import { UserStatModel } from "../models/user-stat";
 
 export function VerifyUserToken() {
     return ErrorProtectedRoute(async (req: any, res, next) => {
@@ -23,11 +24,11 @@ export function VerifyUserToken() {
                         if (err)
                         {
                             console.log("Error creating: " + err.message)
-                            throw err   //DOUBT
+                            throw new ApiError("failed-creating-object", err.message)
                         }
                         req.user = resp                        
-                        next()     
-                    })
+                        next()
+                    })                    
                 }
                 else {
                     //req.user = await UserModel.findOne({ firebaseId: uid })   //Better way?                    
