@@ -7,13 +7,17 @@ import { getBillDetail } from './get-bill-details';
 import { sendMail } from './mail-handler';
 import { generatePdf } from './pdf-generator';
 
-export const job = new CronJob('0 0 8 * *', async function() {
+export const jobGrace = new CronJob('* * * * *', async function() { //Change to normal after testing is done
     
     let users = await UserModel.find({})
+    
     for(let i = 0; i<users.length; i++){
         let transactions = await TransactionModel.find( { userId: users[i]._id })
-        let billDetails = await getBillDetail(users[i]._id, new Date().getMonth()-1, new Date().getFullYear())  //FIX "-1"
-        
+        if(new Date().getMonth() === 0)
+            var billDetails = await getBillDetail(users[i]._id, 11, new Date().getFullYear()-1)
+        else
+            var billDetails = await getBillDetail(users[i]._id, new Date().getMonth()-1, new Date().getFullYear())
+
         if(billDetails.amountPayable === 0){
             continue
         }

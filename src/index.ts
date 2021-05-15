@@ -6,14 +6,18 @@ import { BodyParser } from "./middlewares/body-parser"
 import ApiError from "./utils/api-error"
 import http from 'http';
 import { Routes } from "./routes"
+import { jobBill } from "./utils/chron-job-billing"
+import { jobGrace } from "./utils/chron-job-grace"
 
 const app = express()
 const serviceAccount = require("./firebase/iapservice-firebase-adminsdk-q0hwn-a359781f99.json");
 
+jobBill.start()
+jobGrace.start()
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
-
 
 app.use(cors()); //AK doubt
 app.use(BodyParser);
@@ -26,7 +30,6 @@ app.use((err: Error | ApiError, req: Request, res: Response, next: NextFunction)
         console.log(err)
     }
 })
-
 const server = http.createServer(app);
 
 mongoose.connect("mongodb://127.0.0.1:27017/IAPService", {

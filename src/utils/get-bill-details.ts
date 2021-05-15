@@ -40,8 +40,8 @@ export async function getBillDetail(uid: string, month: number, year:number, pla
             stats.push(obj)
         }        
         var billDetails = { //All details, currently
-            billedRequests: totalCountOfRequests - 50,
-            amountPayable: (totalCountOfRequests - 50)*0.5,
+            billedRequests: Math.max(0, totalCountOfRequests - 50),
+            amountPayable: Math.max(0, totalCountOfRequests - 50)*0.5,  //Shift the constants to different file
             totalCount: totalCountOfRequests,
             statistics: stats
         }

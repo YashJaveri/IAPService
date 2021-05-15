@@ -18,8 +18,8 @@ VerifyRoutes.post('/', ErrorProtectedRoute(async (req: any, res, next) => {
     if(!req.user.disabled)
     {   
         let totalReqs = (await getBillDetail(req.user._id, new Date().getMonth(), new Date().getFullYear())).totalCount
-        
-        if(!req.user.billingEnabled && totalReqs >= 50)
+
+        if(!req.user.billingEnabled && totalReqs >= 50) //Shift to constant's file
         {
             throw new ApiError("billing-disabled", "Request rejected. You have exceeded the free limit. Kindly enable the billing option to continue using our service!")
         }
