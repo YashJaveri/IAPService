@@ -1,7 +1,7 @@
 import { UserStatModel } from "../models/user-stat";
 import ApiError from "./api-error";
 
-export async function getBillDetail(uid: string, month: number, year:number, platf?:string, packageName?:string){
+export async function getBillDetail(uid: string, month: number, year:number, platf:string = "", packageName:string = ""){
     var userStat = await UserStatModel.findOne({userId:uid})
 
     if(!userStat){
@@ -35,8 +35,7 @@ export async function getBillDetail(uid: string, month: number, year:number, pla
             } 
         }
 
-        let stats = []
-
+        var stats = []
         for (let [key,value] of platformAppMapper.entries()) {
             let obj = {
                 platform: key.split(' ')[0],
@@ -44,11 +43,25 @@ export async function getBillDetail(uid: string, month: number, year:number, pla
                 count: value
             }
             stats.push(obj)
-        }
-        
-        return {
+        }        
+        var billDetails = { //All details, currently
             totalCountOfRequests: totalCountOfRequests,
             statistics: stats
         }
+        
+        //Filteration
+        if(packageName !== "" && platf === "")
+        {
+            let x = billDetails.statistics.filter(item => item.appId === packageName)
+            billDetails.statistics = x            
+        }else if(platf !== "" && packageName === ""){
+            let x = billDetails.statistics.filter(item => item.platform === platf)
+            billDetails.statistics = x      
+        }else if(platf !== "" && packageName !== ""){
+            let x = billDetails.statistics.filter(item => (item.platform === platf && item.appId === packageName))
+            billDetails.statistics = x 
+        }
+
+        return billDetails
     }
 }
