@@ -6,8 +6,8 @@ export interface IUser extends Document{
     email: string,
     phoneNumber?: string,    
     apiKey?: string,    
-    billingEnabled?: boolean,
-    disabled?: boolean,
+    billingEnabled?: boolean,    
+    disabled?: boolean,    
     googleConfig?: {},  //To Do
     appleConfig?: {
         secret: string
