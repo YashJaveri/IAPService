@@ -3,7 +3,6 @@ import ErrorProtectedRoute from "../utils/error-protected-route";
 import * as admin from "firebase-admin";
 import { UserModel } from "../models/user";
 import { createApiKey } from "../utils/api-key";
-import { UserStatModel } from "../models/user-stat";
 
 export function VerifyUserToken() {
     return ErrorProtectedRoute(async (req: any, res, next) => {
@@ -30,8 +29,7 @@ export function VerifyUserToken() {
                         next()
                     })                    
                 }
-                else {
-                    //req.user = await UserModel.findOne({ firebaseId: uid })   //Better way?                    
+                else {                    
                     req.user = user
                     next()
                 }
