@@ -1,14 +1,28 @@
 import { UserStatModel } from "../models/user-stat";
 import ApiError from "./api-error";
+import { IUser } from "../models/user"
 
-export async function getBillDetail(uid: string, month: number, year:number, platf:string = "", packageName:string = ""){
-    var userStat = await UserStatModel.findOne({userId:uid})
+export async function getBillDetail(user: IUser, month: number, year:number, platf:string = "", packageName:string = ""){
+    
+    var userStat = await UserStatModel.findOne({userId:user._id})
+    
 
     if(!userStat){
-        throw new ApiError('user-not-found', 'User not found while fetching user stat', 404)
+       
+        return {
+            billedRequests: 0,
+            amountPayable: 0, 
+            totalCount: 0,
+            statistics: []
+        }
+        //throw new ApiError('user-not-found', 'User not found while fetching user stat', 404)
     }else{
-        let givenMonthData = userStat?.requestsStats.filter(item => (month===new Date(item.date).getMonth() 
-            && year===new Date(item.date).getFullYear()))
+        let givenMonthData = userStat?.requestsStats.filter(item => {
+            
+            return month===new Date(item.date).getMonth() 
+            && year===new Date(item.date).getFullYear()})
+
+        
 
         let totalCountOfRequests = 0
         let platformAppMapper = new Map()

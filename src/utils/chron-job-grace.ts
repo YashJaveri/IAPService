@@ -13,26 +13,33 @@ export const jobGrace = new CronJob('* * * * *', async function() { //Change to 
     
     for(let i = 0; i<users.length; i++){
         let transactions = await TransactionModel.find( { userId: users[i]._id })
+        
         if(new Date().getMonth() === 0)
-            var billDetails = await getBillDetail(users[i]._id, 11, new Date().getFullYear()-1)
+            var billDetails = await getBillDetail(users[i], 11, new Date().getFullYear()-1)
         else
-            var billDetails = await getBillDetail(users[i]._id, new Date().getMonth()-1, new Date().getFullYear())
+            var billDetails = await getBillDetail(users[i], new Date().getMonth()-1, new Date().getFullYear())
 
+        
         if(billDetails.amountPayable === 0){
+         
             continue
         }
         else{
             if(transactions === undefined || (transactions && transactions.length === 0)){
+                
                 let pdf = generatePdf(billDetails)
                 sendMail(pdf, users[i].email, "", "")   //add content
                 users[i].disabled = true
                 await users[i].save()
             }else{
+                
                 let d = new Date()
                 d.setDate(d.getDate() - 7)
                 let t = transactions.find(item => new Date(item.forBillDate).toDateString() === d.toDateString())
-                
+               
+                //after this point user is disabled
                 if(!t){
+                  
                     let pdf = generatePdf(billDetails)
                     sendMail(pdf, users[i].email, "", "")   //add content
                     users[i].disabled = true

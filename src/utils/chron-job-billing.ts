@@ -10,7 +10,11 @@ export const jobBill = new CronJob('* * * * *', async function() { //Change to n
 
     let users = await UserModel.find({})
     for(let i = 0; i<users.length; i++){
-        let billDetails = await getBillDetail(users[i]._id, new Date().getMonth(), new Date().getFullYear())
+        if(new Date().getMonth() === 0)
+            var billDetails = await getBillDetail(users[i], 11, new Date().getFullYear()-1)
+        else
+            var billDetails = await getBillDetail(users[i], new Date().getMonth()-1, new Date().getFullYear())
+        
         /*console.log("Billlll: " + JSON.stringify(billDetails))*/
         let pdf = generatePdf(billDetails)
         sendMail(pdf, users[i].email, "", "")   //Add content
