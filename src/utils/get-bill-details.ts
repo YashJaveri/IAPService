@@ -20,19 +20,14 @@ export async function getBillDetail(uid: string, month: number, year:number, pla
             let platform: string = givenMonthData[i].platform
             let appId: string = givenMonthData[i].appId
 
-            if ((!packageName && !platf) || ((packageName || platf) && ((packageName===undefined && platf===platform) 
-            || (platf===undefined && packageName===appId) 
-            || (platf===platform && packageName===appId)))){
+            let key = platform+" "+appId
 
-                let key = platform+" "+appId
-
-                if(platformAppMapper.get(key) === undefined){
-                    platformAppMapper.set(key, count)
-                }else{
-                    let countTillNow = platformAppMapper.get(key)
-                    platformAppMapper.set(key, countTillNow + count)
-                }
-            } 
+            if(platformAppMapper.get(key) === undefined){
+                platformAppMapper.set(key, count)
+            }else{
+                let countTillNow = platformAppMapper.get(key)
+                platformAppMapper.set(key, countTillNow + count)
+            }
         }
 
         var stats = []
@@ -45,7 +40,9 @@ export async function getBillDetail(uid: string, month: number, year:number, pla
             stats.push(obj)
         }        
         var billDetails = { //All details, currently
-            totalCountOfRequests: totalCountOfRequests,
+            billedRequests: Math.max(0, totalCountOfRequests - 50),
+            amountPayable: Math.max(0, totalCountOfRequests - 50)*0.5,  //Shift the constants to different file
+            totalCount: totalCountOfRequests,
             statistics: stats
         }
         
