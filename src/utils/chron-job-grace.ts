@@ -7,6 +7,8 @@ import { getBillDetail } from './get-bill-details';
 import { sendMail } from './mail-handler';
 import { generatePdf } from './pdf-generator';
 
+const RATE = 0.3
+
 export const jobGrace = new CronJob('* * * * *', async function() { //Change to normal after testing is done
     
     let users = await UserModel.find({})
@@ -27,6 +29,15 @@ export const jobGrace = new CronJob('* * * * *', async function() { //Change to 
         else{
             if(transactions === undefined || (transactions && transactions.length === 0)){
                 
+                Object.assign(billDetails, {
+                    name: users[i].name,
+                    email: users[i].email,
+                    rate: 0.3,
+                    dueDate: null, //past due
+                    currDate: new Date().toDateString(),
+                    subTotal: Math.round(((billDetails.totalCount-50)*RATE) * 100) / 100 
+                })
+
                 let pdf = generatePdf(billDetails)
                 sendMail(pdf, users[i].email, "", "")   //add content
                 users[i].disabled = true
@@ -39,7 +50,16 @@ export const jobGrace = new CronJob('* * * * *', async function() { //Change to 
                
                 //after this point user is disabled
                 if(!t){
-                  
+
+                    Object.assign(billDetails, {
+                        name: users[i].name,
+                        email: users[i].email,
+                        rate: 0.3,
+                        dueDate: null,
+                        currDate: new Date().toDateString(),
+                        subTotal: Math.round(((billDetails.totalCount-50)*RATE) * 100) / 100 
+                    })
+
                     let pdf = generatePdf(billDetails)
                     sendMail(pdf, users[i].email, "", "")   //add content
                     users[i].disabled = true
