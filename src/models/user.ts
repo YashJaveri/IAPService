@@ -2,7 +2,7 @@ import { Document, Schema, model } from 'mongoose';
 
 export interface IUser extends Document{
     firebaseId: string,
-    name?: string,
+    name?: string, //we should make this compulsory?
     email: string,
     phoneNumber?: string,    
     apiKey?: string,    

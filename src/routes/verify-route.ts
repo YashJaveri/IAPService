@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { VerifyApiKey } from '../middlewares/verify-api-key'
 import ApiError from '../utils/api-error'
+import { constants } from '../utils/constants'
 import ErrorProtectedRoute from '../utils/error-protected-route'
 import { getBillDetail } from '../utils/get-bill-details'
 import { ResponseData } from '../utils/response'
@@ -17,9 +18,9 @@ VerifyRoutes.post('/', ErrorProtectedRoute(async (req: any, res, next) => {
 
     if(!req.user.disabled)
     {   
-        let totalReqs = (await getBillDetail(req.user._id, new Date().getMonth(), new Date().getFullYear())).totalCount
+        let totalReqs = (await getBillDetail(req.user, new Date().getMonth(), new Date().getFullYear())).totalCount
 
-        if(!req.user.billingEnabled && totalReqs >= 50) //Shift to constant's file
+        if(!req.user.billingEnabled && totalReqs >= constants.FREE_ALLOWANCE)
         {
             throw new ApiError("billing-disabled", "Request rejected. You have exceeded the free limit. Kindly enable the billing option to continue using our service!")
         }
