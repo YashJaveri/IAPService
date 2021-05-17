@@ -3,7 +3,7 @@ import { VerifyApiKey } from '../middlewares/verify-api-key'
 import ApiError from '../utils/api-error'
 import { constants } from '../utils/constants'
 import ErrorProtectedRoute from '../utils/error-protected-route'
-import { getBillDetail } from '../utils/get-bill-details'
+import { getBillDetail } from '../utils/generate-bill'
 import { ResponseData } from '../utils/response'
 import { updateUserStats } from '../utils/user-stats-handeling'
 const iap = require('iap')
@@ -27,7 +27,7 @@ VerifyRoutes.post('/', ErrorProtectedRoute(async (req: any, res, next) => {
         else{
             updateUserStats(req.user, platform, paymentData.packageName)
 
-            //Error handling left/Make your own library
+            //Error handling left/Use your own library
             await new Promise((resolve, reject) => {
                 iap.verifyPayment(platform, paymentData, async (err: Error, response: any) => { 
                     if(response){

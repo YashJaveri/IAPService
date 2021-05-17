@@ -1,30 +1,26 @@
 import { UserStatModel } from "../models/user-stat";
-import ApiError from "./api-error";
 import { IUser } from "../models/user"
 import { constants } from "./constants";
 
-export async function getBillDetail(user: IUser, month: number, year:number, platf:string = "", packageName:string = ""){
+export async function generateBill(user: IUser, month: number, year:number, platf:string = "", packageName:string = ""){
     
     var userStat = await UserStatModel.findOne({userId:user._id})
     
 
     if(!userStat){
-       
         return {
-            billedRequests: 0,
-            amountPayable: 0, 
+            rate: constants.RATE_PER_REQUEST,
+            freeAllowance: constants.FREE_ALLOWANCE,
             totalCount: 0,
             statistics: []
         }
         //throw new ApiError('user-not-found', 'User not found while fetching user stat', 404)
     }else{
         let givenMonthData = userStat?.requestsStats.filter(item => {
-            
             return month===new Date(item.date).getMonth() 
             && year===new Date(item.date).getFullYear()})
 
         
-
         let totalCountOfRequests = 0
         let platformAppMapper = new Map()
 
@@ -51,13 +47,13 @@ export async function getBillDetail(user: IUser, month: number, year:number, pla
                 platform: key.split(' ')[0],
                 appId: key.split(' ')[1],
                 count: value,
-                total: value*constants.RATE_PER_REQUEST
+                totalPrice: value*constants.RATE_PER_REQUEST
             }
             stats.push(obj)
         }        
         var billDetails = { //All details, currently
-            billedRequests: Math.max(0, totalCountOfRequests - constants.FREE_ALLOWANCE),
-            amountPayable: Math.max(0, totalCountOfRequests - constants.FREE_ALLOWANCE)*constants.RATE_PER_REQUEST,
+            rate: constants.RATE_PER_REQUEST,
+            freeAllowance: constants.FREE_ALLOWANCE,
             totalCount: totalCountOfRequests,
             statistics: stats
         }
@@ -66,13 +62,13 @@ export async function getBillDetail(user: IUser, month: number, year:number, pla
         if(packageName !== "" && platf === "")
         {
             let x = billDetails.statistics.filter(item => item.appId === packageName)
-            billDetails.statistics = x            
+            billDetails.statistics = x  
         }else if(platf !== "" && packageName === ""){
             let x = billDetails.statistics.filter(item => item.platform === platf)
-            billDetails.statistics = x      
+            billDetails.statistics = x
         }else if(platf !== "" && packageName !== ""){
             let x = billDetails.statistics.filter(item => (item.platform === platf && item.appId === packageName))
-            billDetails.statistics = x 
+            billDetails.statistics = x
         }
 
         return billDetails
