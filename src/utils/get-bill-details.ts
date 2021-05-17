@@ -49,13 +49,14 @@ export async function getBillDetail(user: IUser, month: number, year:number, pla
             let obj = {
                 platform: key.split(' ')[0],
                 appId: key.split(' ')[1],
-                count: value
+                count: value,
+                total: value*0.3
             }
             stats.push(obj)
         }        
         var billDetails = { //All details, currently
             billedRequests: Math.max(0, totalCountOfRequests - 50),
-            amountPayable: Math.max(0, totalCountOfRequests - 50)*0.5,  //Shift the constants to different file
+            amountPayable: Math.max(0, totalCountOfRequests - 50)*0.3,  //Shift the constants to different file
             totalCount: totalCountOfRequests,
             statistics: stats
         }

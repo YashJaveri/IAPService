@@ -28,7 +28,7 @@ export const jobBill = new CronJob('* * * * *', async function() { //Change to n
             subTotal: Math.round(((billDetails.totalCount-50)*RATE) * 100) / 100 
         })
         
-        let pdf = generatePdf(billDetails)
+        let pdf = await generatePdf(billDetails)
         sendMail(pdf, users[i].email, "", "")   //Add content
     }
 }, null, true, 'Asia/Kolkata');

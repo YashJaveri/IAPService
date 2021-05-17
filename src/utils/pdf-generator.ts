@@ -97,17 +97,18 @@ export async function generatePdf(billData: any){
 
     // }
 
-    console.log(JSON.stringify(billData))
+    
     
     var document = {
         html: html,
         data: {
-          bill: billData
+          bill: billData,
         },
-        path: "./output.pdf",
+        path: "./src/pdfstorage/output.pdf",
         type: "",
     };
 
+    console.log("Creating pdf")
     await pdf
     .create(document, options)
     .then((res: any) => {
@@ -116,6 +117,7 @@ export async function generatePdf(billData: any){
     .catch((error: any) => {
         console.error(error);
     });
+    console.log("Pdf created")
 }
 
 // Read HTML Template

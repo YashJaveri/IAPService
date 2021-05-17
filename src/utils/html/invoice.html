@@ -102,44 +102,34 @@
 
 	<body>
 		<div class="invoice-box">
+            <div style="display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;">
+                <img src="https://www.sparksuite.com/images/logo.png" style="width: 100%; max-width: 300px; " />
+                
+            </div>
+
+            <div style="margin-top:50px">
+                <div>
+                    Cryvis<br />
+                    Mumbai,<br />
+                    Maharashtra, India
+                </div>
+                
+                <div style="float:right; margin-bottom: 30px;">
+                    Invoice #: 123<br />
+                    Name: Adit <br />
+                    Email: {{bill.email}} <br/>
+                    Created: {{bill.currDate}}<br />
+                    Due: {{bill.dueDate}}
+                </div>
+            </div>
+            
 			<table cellpadding="0" cellspacing="0">
-				<tr class="top">
-					<td colspan="2">
-						<table>
-							<tr>
-								<td class="title">
-									<img src="https://www.sparksuite.com/images/logo.png" style="width: 100%; max-width: 300px" />
-								</td>
-                                
-								<td>
-									Invoice #: 123<br />
-									Created: {{bill.currDate}}<br />
-									Due: {{bill.dueDate}}
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
+				
 
-				<tr class="information">
-					<td colspan="2">
-						<table>
-							<tr>
-								<td>
-									Cryvis<br />
-									Mumbai<br />
-									Maharashtra, India
-								</td>
-
-								<td>
-									<!-- Acme Corp.<br />
-									John Doe<br /> -->
-									Email: {{bill.email}}
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
+				
 
 				
 				<tr class="heading">
@@ -150,17 +140,22 @@
                     <td>Total amount</td>
 				</tr>
 
+                {{#each bill.statistics}}
 				<tr class="item" >
-                    {{#each bill.statistics}}
 					<td>{{this.appId}}</td>
                     <td>{{this.platform}}</td>
                     <td>{{this.count}}</td>
 					<td>0.3</td>
-                    <td>45</td>
-                    {{/each}}
+                    <td>{{this.total}}</td> 
 				</tr>
+                {{/each}}
+
+               
 			</table>
-            <p style="text-align-last: right;">SubTotal {{ bill.subTotal }}</p>
+            <div style="text-align: right; margin-top: 20px;"> 
+                - $15 (50 requests free)<br/>
+                SubTotal {{ bill.subTotal }}
+            </div>
 		</div>
 	</body>
 </html>
