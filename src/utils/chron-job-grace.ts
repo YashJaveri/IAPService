@@ -38,7 +38,7 @@ export const jobGrace = new CronJob('* * * * *', async function() { //Change to 
                     subTotal: Math.round(((billDetails.totalCount-50)*RATE) * 100) / 100 
                 })
 
-                let pdf = generatePdf(billDetails)
+                let pdf = await generatePdf(billDetails)
                 sendMail(pdf, users[i].email, "", "")   //add content
                 users[i].disabled = true
                 await users[i].save()
@@ -60,7 +60,7 @@ export const jobGrace = new CronJob('* * * * *', async function() { //Change to 
                         subTotal: Math.round(((billDetails.totalCount-50)*RATE) * 100) / 100 
                     })
 
-                    let pdf = generatePdf(billDetails)
+                    let pdf = await generatePdf(billDetails)
                     sendMail(pdf, users[i].email, "", "")   //add content
                     users[i].disabled = true
                     await users[i].save()
