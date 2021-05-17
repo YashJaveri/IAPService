@@ -2,6 +2,7 @@ import { Document, Schema, model, Model } from 'mongoose';
 
 export interface IInvoice extends Document {
     userId: string,
+    invoiceDisplayId: number,
     billDetails: {
         rate: number,
         freeAllowance: number,
@@ -21,6 +22,7 @@ export interface IInvoice extends Document {
 
 export const InvoiceSchema = new Schema<IInvoice>({
     userId: { type: String, require: [true] },
+    invoiceDisplayId: { type: Number, require: [true] },
     billDetails: {
         type: {
             rate: { type: Number, require: [true] },

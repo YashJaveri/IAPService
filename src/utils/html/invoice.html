@@ -118,8 +118,8 @@
                 </div>
                 
                 <div style="float:right; margin-bottom: 30px;">
-                    Invoice #: 123<br />
-                    Name: Adit <br />
+                    Invoice Id: {{bill.invoiceId}}<br />
+                    Name: {{bill.name}} <br />
                     Email: {{bill.email}} <br/>
                     Created: {{bill.currDate}}<br />
                     Due: {{bill.dueDate}}
@@ -127,11 +127,6 @@
             </div>
             
 			<table cellpadding="0" cellspacing="0">
-				
-
-				
-
-				
 				<tr class="heading">
 					<td>App Name</td>
                     <td>Platform</td>
@@ -145,17 +140,27 @@
 					<td>{{this.appId}}</td>
                     <td>{{this.platform}}</td>
                     <td>{{this.count}}</td>
-					<td>$0.3</td>
-                    <td>${{this.total}}</td> 
+					<td>{{../bill.rate}}</td>
+                    <td>${{this.totalPrice}}</td> 
 				</tr>
                 {{/each}}
-
-               
 			</table>
-            <div style="text-align: right; margin-top: 20px;"> 
-                - $15 (50 requests free)<br/>
-                SubTotal {{ bill.subTotal }}
-            </div>
+
+			<div style="text-align: left; margin-top: 20px; justify-content: flex-end; display: flex;"> 
+				<div>
+					<b>Subtotal:</b> ${{ bill.subTotal }}<br/>
+					<b>Chargeable Requests:</b> {{bill.totalCount}}-{{bill.freeAllowance}} = {{bill.billedRequests}}<br/>
+					<b>Total:</b> ${{bill.amountPayable}}
+				</div>
+			</div>
+			
+			
 		</div>
+		<div style="margin-top: 20px; margin-left: 15px; margin-right: 15px; text-align: justify; color:#555;">
+			<b>Terms and Conditions</b> <br/>
+			Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+		</div>
+
+
 	</body>
 </html>
