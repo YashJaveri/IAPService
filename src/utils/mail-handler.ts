@@ -2,8 +2,6 @@ var nodemailer = require('nodemailer');
 const fs = require('fs')
 
 export function sendMail(pdf: any, email: string, subject: string, body: string) {
-    console.log("Sending mail")
-
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -14,9 +12,9 @@ export function sendMail(pdf: any, email: string, subject: string, body: string)
 
     var mailOptions = {
         from: 'astronauak@gmail.com',
-        to: 'aditkalyani1111@gmail.com',
+        to: email,
         subject: subject,
-        text: 'That was easy!' + body,
+        text: body,
         attachments: [
             {   // file on disk as an attachment
                 filename: 'invoice.pdf',
