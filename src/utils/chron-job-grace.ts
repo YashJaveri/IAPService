@@ -22,7 +22,7 @@ export const jobGrace = new CronJob('* * * * *', async function() { //Change to 
             continue
         }
         else{
-            if(transactions === undefined || (transactions && transactions.length === 0)){
+            if(transactions === undefined || (transactions && transactions.length === 0)){                
                 let pdf = generatePdf(billDetails)
                 sendMail(pdf, users[i].email, "", "")   //add content
                 users[i].disabled = true

@@ -6,14 +6,14 @@ export function VerifyApiKey() {
     return ErrorProtectedRoute(async (req: any, res, next) => {
         let apiKey = req.query.apiKey
         
-        if (apiKey) {            
+        if (apiKey) {
             let user = await UserModel.findOne({ apiKey: apiKey })
             console.log("User: " + user)
             if(user){         
                 req.user = user
                 next()
             }
-            else{                
+            else{
                 throw new ApiError('invalid-api-key', "User not found. Invalid Api key", 404)
             }        
         } else {

@@ -38,7 +38,7 @@ export async function updateUserStats(user: IUser, platform: string, packageName
                 date: Date.now(),
                 platform: platform,
                 appId: packageName,
-                countForThisCombo: 1              
+                countForThisCombo: 1
             })            
         }else{
             userStat.requestsStats[requestStatObjInd].countForThisCombo = userStat.requestsStats[requestStatObjInd].countForThisCombo + 1            

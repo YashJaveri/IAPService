@@ -32,11 +32,11 @@ export async function getBillDetail(uid: string, month: number, year:number, pla
 
         var stats = []
         for (let [key,value] of platformAppMapper.entries()) {
-            let obj = {
-                platform: key.split(' ')[0],
-                appId: key.split(' ')[1],
-                count: value
-            }
+                let obj = {
+                    platform: key.split(' ')[0],
+                    appId: key.split(' ')[1],
+                    count: value
+                }
             stats.push(obj)
         }        
         var billDetails = { //All details, currently
