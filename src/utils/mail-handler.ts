@@ -1,7 +1,22 @@
+import { constants } from "./constants";
+import { invoiceMailHtml } from "./html/invoice-email-format";
+
 var nodemailer = require('nodemailer');
 const fs = require('fs')
+const handlebars = require('handlebars')
 
-export function sendMail(pdf: any, email: string, subject: string, body: string) {
+export function sendMail(pdf: any, email: string, subject: string, dueDate: Date, link: string, renderHtml: any) {
+    var billingMonth
+    var billingYear
+   
+    if(new Date().getMonth() === 0){
+        billingMonth = constants.MONTH_NAMES[11]
+        billingYear = new Date().getFullYear()-1
+    }else{
+        billingMonth = constants.MONTH_NAMES[new Date().getMonth()-1]
+        billingYear = billingYear = new Date().getFullYear()
+    }
+
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -10,11 +25,22 @@ export function sendMail(pdf: any, email: string, subject: string, body: string)
         }
     });
 
+    var template = handlebars.compile(renderHtml());
+    console.log("after template")
+
+    var replacements = {
+        dueDate: dueDate.toLocaleString(),
+        month: billingMonth,
+        year: billingYear,
+        paymentUrl: link
+    };
+    var htmlToSend = template(replacements);
+
     var mailOptions = {
-        from: 'astronauak@gmail.com',
+        from: 'astronauak@gmail.com',   //change to professional mail
         to: email,
         subject: subject,
-        text: body,
+        html: htmlToSend,
         attachments: [
             {   // file on disk as an attachment
                 filename: 'invoice.pdf',
@@ -29,9 +55,10 @@ export function sendMail(pdf: any, email: string, subject: string, body: string)
             console.log(error);
         } else {
             console.log('Email sent: ' + info.response);
+            fs.unlinkSync('./src/pdfstorage/output.pdf')
         }
     });
 
-    fs.unlinkSync('./src/pdfstorage/output.pdf')
+    
 }
 

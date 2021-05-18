@@ -8,7 +8,7 @@ export const ProfileRoutes = Router()
 
 ProfileRoutes.use(VerifyUserToken())   //Auth custom middleware
 
-ProfileRoutes.post('/', ErrorProtectedRoute( async (req: any, resp) => {    
+ProfileRoutes.put('/', ErrorProtectedRoute( async (req: any, resp) => {    
     Object.assign(req.user, req.body)    
     try{
         let updatedUser = await req.user.save()        

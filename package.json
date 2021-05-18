@@ -16,7 +16,7 @@
     "easyinvoice": "^1.0.119",
     "express": "^4.17.1",
     "firebase-admin": "^9.7.0",
-    "iap": "^1.1.1",
+    "handlebars": "^4.7.7",
     "ignore-loader": "^0.1.2",
     "mongoose": "^5.12.7",
     "nodemailer": "^6.6.0",

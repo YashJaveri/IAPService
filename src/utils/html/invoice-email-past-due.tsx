@@ -1,5 +1,7 @@
-export function invoiceMailHtml(month: string, year: string, paymentUrl: string, dueDate: string) {
-    return `<!DOCTYPE html>
+const Handlebars = require("handlebars");
+
+export function invoiceDueMailHtml() {
+    var source = `<!DOCTYPE html>
     <html>
         <head>
             <meta charset="utf-8">
@@ -121,7 +123,7 @@ export function invoiceMailHtml(month: string, year: string, paymentUrl: string,
                                     style="padding: 36px 24px 0; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; border-top: 3px solid #d4dadf;">
                                     <h1
                                         style="margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -1px; line-height: 48px;">
-                                        Your invoice for month} is ready</h1>
+                                        Your payment is due</h1>
                                 </td>
                             </tr>
                         </table>
@@ -145,12 +147,14 @@ export function invoiceMailHtml(month: string, year: string, paymentUrl: string,
                                     <p style="margin: 0;">We thank you for using our service!</p>
                                 </td>
                             </tr>
-                            
+                     
                             <tr>
                                 <td align="left" bgcolor="#ffffff"
                                     style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-                                    <p style="margin: 0;">Your invoice for ${month}, ${year} is ready. Kindly make the payment using this 
-                                    <a style="color: #fc5350;" href=${paymentUrl} target="_blank">link</a> by ${dueDate}. You can also complete the payment by visiting your dashboard at
+                                    <p style="margin: 0;">The due date for completing the payment has passed.
+                                    Your service is suspended.
+                                    Kindly complete your payment for the last month, <a style="color: #fc5350;" href={{paymentUrl}} target="_blank">here</a> to continue using our service. 
+                                    You can also complete the payment by visiting your dashboard at
                                     <a style="color: #fc5350;" href="www.somewebsite.com" target="_blank">www.somewebsite.com</a></p>
                                     </p>
                                     <p style="margin: 0;">If the pdf looks corrupted. Kindly contact us at</p>
@@ -173,4 +177,6 @@ export function invoiceMailHtml(month: string, year: string, paymentUrl: string,
             </table>        
         </body>
         </html>`
+
+        return source
 }
