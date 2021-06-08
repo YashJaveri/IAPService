@@ -16,17 +16,6 @@ export const jobBill = new CronJob('* * * * *', async function () { //Change to 
     let users = await UserModel.find({})
     let dueDate = new Date(new Date().setDate(new Date().getDate() + 7))
 
-    var billingMonth
-    var billingYear
-   
-    if(new Date().getMonth() === 0){
-        billingMonth = constants.MONTH_NAMES[11]
-        billingYear = new Date().getFullYear()-1
-    }else{
-        billingMonth = constants.MONTH_NAMES[new Date().getMonth()-1]
-        billingYear = billingYear = new Date().getFullYear()
-    }
-
     for (const user of users) {
         if (new Date().getMonth() === 0)
             var pdfData = await generateBill(user, 11, new Date().getFullYear() - 1)
@@ -61,7 +50,7 @@ export const jobBill = new CronJob('* * * * *', async function () { //Change to 
             })
 
             let pdf = await generatePdf(pdfData)
-            sendMail(pdf, user.email, "Test Mail", dueDate, billingMonth, billingYear, "www.google.com", invoiceMailHtml)   //Add content 
+            sendMail(pdf, user.email, "Test Mail", dueDate, "www.google.com", invoiceMailHtml)   //Add content 
         }
     }
 }, null, true, 'Asia/Kolkata');

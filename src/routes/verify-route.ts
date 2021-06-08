@@ -6,7 +6,7 @@ import ErrorProtectedRoute from '../utils/error-protected-route'
 import { generateBill } from '../utils/generate-bill'
 import { ResponseData } from '../utils/response'
 import { updateUserStats } from '../utils/user-stats-handeling'
-const iap = require('iap')
+import iap from "../utils/iap"
 
 export const VerifyRoutes = Router()
 

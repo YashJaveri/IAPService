@@ -13,17 +13,6 @@ export const jobGrace = new CronJob('* * * * *', async function () { //Change to
 
     let users = await UserModel.find({})
     let dueDate = new Date(new Date().setDate(new Date().getDate() + 7))
-    var billingMonth
-    var billingYear
-   
-
-    if(new Date().getMonth() === 0){
-        billingMonth = constants.MONTH_NAMES[11]
-        billingYear = new Date().getFullYear()-1
-    }else{
-        billingMonth = constants.MONTH_NAMES[new Date().getMonth()-1]
-        billingYear = billingYear = new Date().getFullYear()
-    }
 
     for (const user of users) {
         let invoice = await InvoiceModel.findOne({ userId: user._id}, {}, {sort: {'created_at':-1}})
@@ -44,7 +33,7 @@ export const jobGrace = new CronJob('* * * * *', async function () { //Change to
 
             console.log("Cron grace running...")
             let pdf = await generatePdf(pdfData)
-            sendMail(pdf, user.email, "Test Mail", dueDate, billingMonth, billingYear, "www.google.com", invoiceDueMailHtml) 
+            sendMail(pdf, user.email, "Test Mail", dueDate, "www.google.com", invoiceDueMailHtml) 
             
             user.disabled = true
             await user.save()
