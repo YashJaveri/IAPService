@@ -8,7 +8,8 @@ export function VerifyUserToken() {
     return ErrorProtectedRoute(async (req: any, res, next) => {
         var token = req.headers['authorization']?.replace('Bearer ', '').trim() //WHY?
         if (token) { 
-            await admin.auth().verifyIdToken(token).then(async (resp) => {                       
+            await admin.auth().verifyIdToken(token).then(async (resp) => {  
+                console.log("Token Verified")                     
                 var uid = resp.uid                
                 let user = await UserModel.findOne({ firebaseId: uid })
                 
@@ -34,7 +35,7 @@ export function VerifyUserToken() {
                     next()
                 }
             })
-            .catch((err) => {                
+            .catch((err) => {              
                 throw new ApiError('user-not-found', "User not found!", 404)
             })
         } else {

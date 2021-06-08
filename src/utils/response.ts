@@ -1,5 +1,5 @@
 export class ResponseData{
-    message?: string = ""
+    message?: string = undefined
     resultCode?: string = "00"
     data: any = {}
 
