@@ -14,10 +14,10 @@ export function VerifyUserToken() {
                 
                 if(!user){
                     console.log("User not found hence creating")
-                    let user = {
+                    let user = {                        
                         firebaseId: uid,
                         email: resp.email,
-                        apiKey: createApiKey().apiKey
+                        apiKey: createApiKey().apiKey                        
                     }
                     UserModel.create(user, (err, resp) => {
                         if (err)

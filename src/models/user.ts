@@ -22,7 +22,7 @@ export const UserSchema = new Schema<IUser>({
     firebaseId: { type: String, require: [true, "Firebase id is required"]},
     name: { type: String, default: "" },
     email: { type: String, require: [true, "Email is required"] },
-    phoneNumber: { type: String, unique: true, default: "" },
+    phoneNumber: { type: String },
     apiKey: { type: String, default: "" },
     billingEnabled: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
