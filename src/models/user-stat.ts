@@ -15,7 +15,7 @@ export const UserStatSchema = new Schema<IUserStat>({
     requestsStats: {
         type: [{
             date: { type: Number, require: [true, "Date is required"]},                            
-            platform: { type: String, require: [true, "Platform is required"] },
+            platform: { type: String, require: [true, "Platform is required"], enum: ['google', 'apple', 'amazon']},
             appId: { type: String, require: [true, "AppId is required"] },
             countForThisCombo: { type: Number }                
         }]

@@ -8,10 +8,12 @@ export function VerifyUserToken() {
     return ErrorProtectedRoute(async (req: any, res, next) => {
         var token = req.headers['authorization']?.replace('Bearer ', '').trim() //WHY?
         if (token) { 
-            await admin.auth().verifyIdToken(token).then(async (resp) => {                       
+            await admin.auth().verifyIdToken(token).then(async (resp) => {  
+                console.log("Token Verified!!!")                     
                 var uid = resp.uid                
                 let user = await UserModel.findOne({ firebaseId: uid })
-                
+                console.log('user being searched in db')
+
                 if(!user){
                     console.log("User not found hence creating")
                     let user = {                        
@@ -25,7 +27,7 @@ export function VerifyUserToken() {
                             console.log("Error creating: " + err.message)
                             throw new ApiError("failed-creating-object", err.message)
                         }
-                        req.user = resp                        
+                        req.user = resp
                         next()
                     })                    
                 }
@@ -34,7 +36,7 @@ export function VerifyUserToken() {
                     next()
                 }
             })
-            .catch((err) => {                
+            .catch((err) => {              
                 throw new ApiError('user-not-found', "User not found!", 404)
             })
         } else {

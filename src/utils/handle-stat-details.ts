@@ -2,11 +2,10 @@ import { UserStatModel } from "../models/user-stat";
 import { IUser } from "../models/user"
 import { constants } from "./constants";
 
-export async function generateBill(user: IUser, month: number, year:number, platf:string = "", packageName:string = ""){
+export async function getCompleteUserStats(user: IUser, month: number, year:number){
     
     var userStat = await UserStatModel.findOne({userId:user._id})
     
-
     if(!userStat){
         return {
             rate: constants.RATE_PER_REQUEST,
@@ -57,20 +56,23 @@ export async function generateBill(user: IUser, month: number, year:number, plat
             totalCount: totalCountOfRequests,
             statistics: stats
         }
+
+        return billDetails
+    }
+}
+
+export function filterStatistics(billDetails: any, platf:string = "", packageName:string = ""){
         
-        //Filteration
-        if(packageName !== "" && platf === "")
-        {
-            let x = billDetails.statistics.filter(item => item.appId === packageName)
+        if(packageName !== "" && platf === ""){
+            let x = billDetails.statistics.filter((item: any) => item.appId === packageName)
             billDetails.statistics = x  
         }else if(platf !== "" && packageName === ""){
-            let x = billDetails.statistics.filter(item => item.platform === platf)
+            let x = billDetails.statistics.filter((item: any) => item.platform === platf)
             billDetails.statistics = x
         }else if(platf !== "" && packageName !== ""){
-            let x = billDetails.statistics.filter(item => (item.platform === platf && item.appId === packageName))
+            let x = billDetails.statistics.filter((item: any) => (item.platform === platf && item.appId === packageName))
             billDetails.statistics = x
         }
 
         return billDetails
-    }
 }

@@ -1,7 +1,7 @@
 export class ResponseData{
-    message?: string = ""
-    resultCode?: string = "00"
     data: any = {}
+    message?: string = undefined
+    resultCode?: string = "00"
 
     constructor(data: any, resultCode?: string, message?: string) {
         this.data = data

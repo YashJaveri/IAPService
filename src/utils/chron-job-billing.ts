@@ -4,7 +4,7 @@ import { CronJob } from 'cron'
 import { InvoiceModel } from '../models/invoice';
 import { UserModel } from '../models/user';
 import { constants } from './constants';
-import { generateBill } from './generate-bill';
+import { getCompleteUserStats } from './handle-stat-details';
 import { invoiceMailHtml } from './html/invoice-email-format';
 import { sendMail } from './mail-handler';
 import { generatePdf } from './pdf-generator';
@@ -18,9 +18,9 @@ export const jobBill = new CronJob('* * * * *', async function () { //Change to 
 
     for (const user of users) {
         if (new Date().getMonth() === 0)
-            var pdfData = await generateBill(user, 11, new Date().getFullYear() - 1)
+            var pdfData = await getCompleteUserStats(user, 11, new Date().getFullYear() - 1)
         else
-            var pdfData = await generateBill(user, new Date().getMonth() - 1, new Date().getFullYear())
+            var pdfData = await getCompleteUserStats(user, new Date().getMonth() - 1, new Date().getFullYear())
 
         let amountPayable = Math.max(0, pdfData.totalCount - constants.FREE_ALLOWANCE) * constants.RATE_PER_REQUEST
 
