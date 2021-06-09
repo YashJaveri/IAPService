@@ -3,7 +3,7 @@ import { VerifyApiKey } from '../middlewares/verify-api-key'
 import ApiError from '../utils/api-error'
 import { constants } from '../utils/constants'
 import ErrorProtectedRoute from '../utils/error-protected-route'
-import { generateBill } from '../utils/generate-bill'
+import { getStatDetails } from '../utils/handle-stat-details'
 import { ResponseData } from '../utils/response'
 import { updateUserStats } from '../utils/user-stats-handeling'
 import iap from "../utils/iap"
@@ -18,7 +18,7 @@ VerifyRoutes.post('/', ErrorProtectedRoute(async (req: any, res, next) => {
 
     if(!req.user.disabled)
     {   
-        let totalReqs = (await generateBill(req.user, new Date().getMonth(), new Date().getFullYear())).totalCount
+        let totalReqs = (await getStatDetails(req.user, new Date().getMonth(), new Date().getFullYear())).totalCount
 
         if(!req.user.billingEnabled && totalReqs >= constants.FREE_ALLOWANCE)
         {

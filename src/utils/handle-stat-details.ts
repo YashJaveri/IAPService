@@ -2,7 +2,7 @@ import { UserStatModel } from "../models/user-stat";
 import { IUser } from "../models/user"
 import { constants } from "./constants";
 
-export async function generateBill(user: IUser, month: number, year:number, platf:string = "", packageName:string = ""){
+export async function getStatDetails(user: IUser, month: number, year:number, platf:string = "", packageName:string = ""){
     
     var userStat = await UserStatModel.findOne({userId:user._id})
     
@@ -59,8 +59,7 @@ export async function generateBill(user: IUser, month: number, year:number, plat
         }
         
         //Filteration
-        if(packageName !== "" && platf === "")
-        {
+        if(packageName !== "" && platf === ""){
             let x = billDetails.statistics.filter(item => item.appId === packageName)
             billDetails.statistics = x  
         }else if(platf !== "" && packageName === ""){

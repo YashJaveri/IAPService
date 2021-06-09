@@ -9,10 +9,11 @@ export function VerifyUserToken() {
         var token = req.headers['authorization']?.replace('Bearer ', '').trim() //WHY?
         if (token) { 
             await admin.auth().verifyIdToken(token).then(async (resp) => {  
-                console.log("Token Verified")                     
+                console.log("Token Verified!!!")                     
                 var uid = resp.uid                
                 let user = await UserModel.findOne({ firebaseId: uid })
-                
+                console.log('user being searched in db')
+
                 if(!user){
                     console.log("User not found hence creating")
                     let user = {
