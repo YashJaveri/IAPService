@@ -7,6 +7,8 @@ import { createApiKey } from "../utils/api-key";
 export function VerifyUserToken() {
     return ErrorProtectedRoute(async (req: any, res, next) => {
         var token = req.headers['authorization']?.replace('Bearer ', '').trim() //WHY?
+        console.log('Token',token)
+        
         if (token) { 
             await admin.auth().verifyIdToken(token).then(async (resp) => {  
                 console.log("Token Verified!!!")                     

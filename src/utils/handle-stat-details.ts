@@ -65,14 +65,14 @@ export function filterStatistics(billDetails: any, platf:string = "", packageNam
         
         if(packageName !== "" && platf === ""){
             let x = billDetails.statistics.filter((item: any) => item.appId === packageName)
-            billDetails.statistics = x  
+            return x
         }else if(platf !== "" && packageName === ""){
             let x = billDetails.statistics.filter((item: any) => item.platform === platf)
-            billDetails.statistics = x
+            return x
         }else if(platf !== "" && packageName !== ""){
             let x = billDetails.statistics.filter((item: any) => (item.platform === platf && item.appId === packageName))
-            billDetails.statistics = x
+            return x
         }
 
-        return billDetails
+        return billDetails.statistics
 }

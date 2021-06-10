@@ -22,22 +22,23 @@ UserStatRoutes.get('/', ErrorProtectedRoute(async (req: any, resp) => {
     let completeUserStatData = await getCompleteUserStats(user, new Date().getMonth(), new Date().getFullYear())
 
     response.all = completeUserStatData.statistics
-    response.google = filterStatistics(completeUserStatData, 'google', "")
     response.apple = filterStatistics(completeUserStatData, 'apple', "")
+    response.google = filterStatistics(completeUserStatData, 'google', "")
+    
     response.amazon = filterStatistics(completeUserStatData, 'amazon', "")
 
     let packageMap = new Map()
 
     for(let item of completeUserStatData.statistics){        
-        if(packageMap.get(item.appId) == undefined){
+        if(packageMap.get(item.appId) === undefined){
             packageMap.set(item.appId, 1)
         }
     }
 
     for(let packageName of packageMap.keys()){
-        response.push(filterStatistics(completeUserStatData, 'google', packageName)[0])
-        response.push(filterStatistics(completeUserStatData, 'apple', packageName)[0])
-        response.push(filterStatistics(completeUserStatData, 'amazon', packageName)[0])
+        response.packageWise.push(filterStatistics(completeUserStatData, 'google', packageName)[0])
+        response.packageWise.push(filterStatistics(completeUserStatData, 'apple', packageName)[0])
+        response.packageWise.push(filterStatistics(completeUserStatData, 'amazon', packageName)[0])
     }
 
     resp.send(new ResponseData(response))
