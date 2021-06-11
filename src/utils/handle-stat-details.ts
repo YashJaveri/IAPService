@@ -85,7 +85,15 @@ export async function getCompleteUserStats(user: IUser, month: number, year:numb
     }
 }
 
+export function getPlatformWiseTotalCount(platformDetails: any) {
+    let totalCount = 0
 
+    for(let i=0; i<platformDetails.length; i++){
+        totalCount += platformDetails[i].count
+    }
+
+    return totalCount
+}
 
 export function filterStatistics(billDetails: any, platf:string = "", packageName:string = ""){
         

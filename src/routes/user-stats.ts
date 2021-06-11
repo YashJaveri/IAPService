@@ -3,7 +3,7 @@ import { VerifyUserToken } from '../middlewares/auth'
 import { UserStatModel } from '../models/user-stat'
 import ApiError from '../utils/api-error'
 import ErrorProtectedRoute from '../utils/error-protected-route'
-import { filterStatistics, getCompleteUserStats, getCountOfReqPerMonth } from '../utils/handle-stat-details'
+import { filterStatistics, getCompleteUserStats, getCountOfReqPerMonth, getPlatformWiseTotalCount } from '../utils/handle-stat-details'
 import { ResponseData } from '../utils/response'
 
 export const UserStatRoutes = Router()
@@ -18,6 +18,9 @@ UserStatRoutes.get('/', ErrorProtectedRoute(async (req: any, resp) => {
         amazon: [],
         packageWise: [],
         monthWise: [],
+        amazonCount: 0,
+        googleCount: 0,
+        appleCount: 0,
     }
 
     let user = req.user
@@ -33,6 +36,11 @@ UserStatRoutes.get('/', ErrorProtectedRoute(async (req: any, resp) => {
     response.apple = filterStatistics(completeUserStatData, 'apple', "")
     response.google = filterStatistics(completeUserStatData, 'google', "")
     response.amazon = filterStatistics(completeUserStatData, 'amazon', "")
+
+    getPlatformWiseTotalCount(response.apple)
+    response.googleCount = getPlatformWiseTotalCount(response.google)
+    response.amazonCount = getPlatformWiseTotalCount(response.amazon)
+    response.appleCount = getPlatformWiseTotalCount(response.apple)
 
     let packageMap = new Map()
 
