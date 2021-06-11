@@ -26,7 +26,7 @@ export async function getCountOfReqPerMonth(userStat: any, month: number, year:n
     }
 }
 
-export function getCountOfReqPerDay(userStat: any, day: number, month: number, year: number) {
+export function getCountOfReqPerDay(userStat: any, day: number, month: number, year: number, platform: string) {
     
     if(!userStat){
         return {
@@ -41,11 +41,14 @@ export function getCountOfReqPerDay(userStat: any, day: number, month: number, y
             && year===new Date(item.date).getFullYear()
             && day===new Date(item.date).getDate()
         })
-        console.log('Given day', givenDayData)
+        
         let totalCountOfRequests = 0
 
         for(let i=0; i<givenDayData.length; i++) {
-            totalCountOfRequests +=  givenDayData[i].countForThisCombo
+        
+            if(platform==='total' || givenDayData[i].platform === platform){
+                totalCountOfRequests +=  givenDayData[i].countForThisCombo
+            }
         }
         
         return totalCountOfRequests

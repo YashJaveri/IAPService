@@ -27,6 +27,7 @@ UserStatRoutes.get('/', ErrorProtectedRoute(async (req: any, resp) => {
     let user = req.user
     let completeUserStatData = await getCompleteUserStats(user, new Date().getMonth(), new Date().getFullYear())
     let userStat = await UserStatModel.findOne({userId:user._id})
+    let platforms = ['total', 'google', 'apple', 'amazon']
 
     for(let i=0; i<12; i++){
         let monthWiseCount = await getCountOfReqPerMonth(userStat, i, new Date().getFullYear())
@@ -36,9 +37,14 @@ UserStatRoutes.get('/', ErrorProtectedRoute(async (req: any, resp) => {
     var dt = new Date();
     let noOfDaysThisMonth = new Date(dt.getFullYear(), dt.getMonth()+1, 0).getDate()
 
-    for(let i=0; i<noOfDaysThisMonth; i++){
-        let dayWiseCount = getCountOfReqPerDay(userStat, i+1, dt.getMonth(), dt.getFullYear())
-        response.dayWise.push(dayWiseCount)
+    
+        for(let platform=0; platform<platforms.length; platform++){
+            let countPerPlatform = []
+            for(let day=0; day<noOfDaysThisMonth; day++){
+                let dayWiseCount = getCountOfReqPerDay(userStat, day+1, dt.getMonth(), dt.getFullYear(), platforms[platform])
+                countPerPlatform.push(dayWiseCount)
+            }
+        response.dayWise.push(countPerPlatform)
     }
 
     response.all = completeUserStatData.statistics
