@@ -1,6 +1,30 @@
-import { UserStatModel } from "../models/user-stat";
+import { IUserStat, UserStatModel } from "../models/user-stat";
 import { IUser } from "../models/user"
 import { constants } from "./constants";
+
+export async function getCountOfReqPerMonth(userStat: any, month: number, year:number) {
+    if(!userStat){
+        return {
+            rate: constants.RATE_PER_REQUEST,
+            freeAllowance: constants.FREE_ALLOWANCE,
+            totalCount: 0,
+            statistics: []
+        }
+    }else{
+        let givenMonthData = userStat?.requestsStats.filter((item:any) => {
+            return month===new Date(item.date).getMonth() 
+            && year===new Date(item.date).getFullYear()
+        })
+
+        let totalCountOfRequests = 0
+
+        for(let i=0; i<givenMonthData.length;i++) {
+            totalCountOfRequests +=  givenMonthData[i].countForThisCombo
+        }
+
+        return totalCountOfRequests
+    }
+}
 
 export async function getCompleteUserStats(user: IUser, month: number, year:number){
     
@@ -23,7 +47,7 @@ export async function getCompleteUserStats(user: IUser, month: number, year:numb
         let totalCountOfRequests = 0
         let platformAppMapper = new Map()
 
-        for (let i=0; i<givenMonthData.length;i++){
+        for (let i=0; i<givenMonthData.length; i++){
             let count = givenMonthData[i].countForThisCombo
             totalCountOfRequests += count
 
@@ -60,6 +84,8 @@ export async function getCompleteUserStats(user: IUser, month: number, year:numb
         return billDetails
     }
 }
+
+
 
 export function filterStatistics(billDetails: any, platf:string = "", packageName:string = ""){
         

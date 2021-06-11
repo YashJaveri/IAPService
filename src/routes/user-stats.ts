@@ -1,8 +1,9 @@
 import { Router } from 'express'
 import { VerifyUserToken } from '../middlewares/auth'
+import { UserStatModel } from '../models/user-stat'
 import ApiError from '../utils/api-error'
 import ErrorProtectedRoute from '../utils/error-protected-route'
-import { filterStatistics, getCompleteUserStats } from '../utils/handle-stat-details'
+import { filterStatistics, getCompleteUserStats, getCountOfReqPerMonth } from '../utils/handle-stat-details'
 import { ResponseData } from '../utils/response'
 
 export const UserStatRoutes = Router()
@@ -15,16 +16,22 @@ UserStatRoutes.get('/', ErrorProtectedRoute(async (req: any, resp) => {
         google: [],
         apple: [],
         amazon: [],
-        packageWise: []
+        packageWise: [],
+        monthWise: [],
     }
 
     let user = req.user
     let completeUserStatData = await getCompleteUserStats(user, new Date().getMonth(), new Date().getFullYear())
+    
+    let userStat = await UserStatModel.findOne({userId:user._id})
+    for(let i=0; i<12; i++){
+        let monthWiseData = await getCountOfReqPerMonth(userStat, i, new Date().getFullYear())
+        response.monthWise.push(monthWiseData)
+    }
 
     response.all = completeUserStatData.statistics
     response.apple = filterStatistics(completeUserStatData, 'apple', "")
     response.google = filterStatistics(completeUserStatData, 'google', "")
-    
     response.amazon = filterStatistics(completeUserStatData, 'amazon', "")
 
     let packageMap = new Map()
