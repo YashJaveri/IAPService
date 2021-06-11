@@ -26,6 +26,32 @@ export async function getCountOfReqPerMonth(userStat: any, month: number, year:n
     }
 }
 
+export function getCountOfReqPerDay(userStat: any, day: number, month: number, year: number) {
+    
+    if(!userStat){
+        return {
+            rate: constants.RATE_PER_REQUEST,
+            freeAllowance: constants.FREE_ALLOWANCE,
+            totalCount: 0,
+            statistics: []
+        }
+    }else{
+        let givenDayData = userStat?.requestsStats.filter((item:any) => {
+            return month===new Date(item.date).getMonth() 
+            && year===new Date(item.date).getFullYear()
+            && day===new Date(item.date).getDate()
+        })
+        console.log('Given day', givenDayData)
+        let totalCountOfRequests = 0
+
+        for(let i=0; i<givenDayData.length; i++) {
+            totalCountOfRequests +=  givenDayData[i].countForThisCombo
+        }
+        
+        return totalCountOfRequests
+    }
+}
+
 export async function getCompleteUserStats(user: IUser, month: number, year:number){
     
     var userStat = await UserStatModel.findOne({userId:user._id})

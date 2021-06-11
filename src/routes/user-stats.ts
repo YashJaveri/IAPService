@@ -3,7 +3,7 @@ import { VerifyUserToken } from '../middlewares/auth'
 import { UserStatModel } from '../models/user-stat'
 import ApiError from '../utils/api-error'
 import ErrorProtectedRoute from '../utils/error-protected-route'
-import { filterStatistics, getCompleteUserStats, getCountOfReqPerMonth, getPlatformWiseTotalCount } from '../utils/handle-stat-details'
+import { filterStatistics, getCompleteUserStats, getCountOfReqPerDay, getCountOfReqPerMonth, getPlatformWiseTotalCount } from '../utils/handle-stat-details'
 import { ResponseData } from '../utils/response'
 
 export const UserStatRoutes = Router()
@@ -18,6 +18,7 @@ UserStatRoutes.get('/', ErrorProtectedRoute(async (req: any, resp) => {
         amazon: [],
         packageWise: [],
         monthWise: [],
+        dayWise: [],
         amazonCount: 0,
         googleCount: 0,
         appleCount: 0,
@@ -25,11 +26,19 @@ UserStatRoutes.get('/', ErrorProtectedRoute(async (req: any, resp) => {
 
     let user = req.user
     let completeUserStatData = await getCompleteUserStats(user, new Date().getMonth(), new Date().getFullYear())
-    
     let userStat = await UserStatModel.findOne({userId:user._id})
+
     for(let i=0; i<12; i++){
-        let monthWiseData = await getCountOfReqPerMonth(userStat, i, new Date().getFullYear())
-        response.monthWise.push(monthWiseData)
+        let monthWiseCount = await getCountOfReqPerMonth(userStat, i, new Date().getFullYear())
+        response.monthWise.push(monthWiseCount)
+    }
+
+    var dt = new Date();
+    let noOfDaysThisMonth = new Date(dt.getFullYear(), dt.getMonth()+1, 0).getDate()
+
+    for(let i=0; i<noOfDaysThisMonth; i++){
+        let dayWiseCount = getCountOfReqPerDay(userStat, i+1, dt.getMonth(), dt.getFullYear())
+        response.dayWise.push(dayWiseCount)
     }
 
     response.all = completeUserStatData.statistics
