@@ -22,6 +22,7 @@ UserStatRoutes.get('/', ErrorProtectedRoute(async (req: any, resp) => {
         amazonCount: 0,
         googleCount: 0,
         appleCount: 0,
+        totalCount: 0
     }
 
     let user = req.user
@@ -52,10 +53,10 @@ UserStatRoutes.get('/', ErrorProtectedRoute(async (req: any, resp) => {
     response.google = filterStatistics(completeUserStatData, 'google', "")
     response.amazon = filterStatistics(completeUserStatData, 'amazon', "")
 
-    getPlatformWiseTotalCount(response.apple)
     response.googleCount = getPlatformWiseTotalCount(response.google)
     response.amazonCount = getPlatformWiseTotalCount(response.amazon)
     response.appleCount = getPlatformWiseTotalCount(response.apple)
+    response.totalCount = response.googleCount + response.amazonCount + response.appleCount
 
     let packageMap = new Map()
 
