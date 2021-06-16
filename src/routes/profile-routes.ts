@@ -3,13 +3,17 @@ import { VerifyUserToken } from '../middlewares/auth'
 import ApiError from '../utils/api-error'
 import ErrorProtectedRoute from '../utils/error-protected-route'
 import { ResponseData } from '../utils/response'
+import { createApiKey } from '../utils/api-key'
 
 export const ProfileRoutes = Router()
 
 ProfileRoutes.use(VerifyUserToken())   //Auth custom middleware
 
 ProfileRoutes.put('/', ErrorProtectedRoute( async (req: any, resp) => {    
-    Object.assign(req.user, req.body)    
+    Object.assign(req.user, req.body)  
+    if(req.body.apiKey === 'change'){
+        req.user.apiKey = createApiKey().apiKey
+    }  
     try{
         let updatedUser = await req.user.save()        
         if(updatedUser !== undefined)
