@@ -12,30 +12,36 @@ import { generatePdf } from './pdf-generator';
 
 
 export const jobBill = new CronJob('* * * * *', async function () { //Change to normal after testing is done
-
+    console.log('Cron job billing started...')
     let users = await UserModel.find({})
     let dueDate = new Date(new Date().setDate(new Date().getDate() + 7))
+    // console.log('Users found')
 
     for (const user of users) {
         if (new Date().getMonth() === 0)
             var pdfData = await getCompleteUserStats(user, 11, new Date().getFullYear() - 1)
         else
             var pdfData = await getCompleteUserStats(user, new Date().getMonth() - 1, new Date().getFullYear())
+        
+        // console.log('got complete user stats')
 
         let amountPayable = Math.max(0, pdfData.totalCount - constants.FREE_ALLOWANCE) * constants.RATE_PER_REQUEST
 
+        // console.log('Amount Payable', amountPayable)
+
         if (amountPayable > 0) {
-            let prevInvoice = await InvoiceModel.findOne({}, {}, {sort: { "created_at":-1}})
-            
-            var prevInvoiceId=-1
+            // let prevInvoice = await InvoiceModel.findOne({}, {}, {sort: { 'created_at':-1}})
+            let prevInvoice = await InvoiceModel.findOne().sort({createdAt: -1})
+
+            var invoiceId=-1
             
             if(!prevInvoice){
-                prevInvoiceId=1
+                invoiceId=1
             }else{
-                prevInvoiceId = (prevInvoice.invoiceDisplayId + 1)%Math.pow(10,7)
+                invoiceId = (prevInvoice.invoiceDisplayId + 1)%Math.pow(10,7)
             }
 
-            let invoice = await InvoiceModel.create({ userId: user._id, invoiceDisplayId: prevInvoiceId, billDetails: pdfData, amount: amountPayable })
+            let invoice = await InvoiceModel.create({ userId: user._id, invoiceDisplayId: invoiceId, billDetails: pdfData, amount: amountPayable })
             
 
             Object.assign(pdfData, {

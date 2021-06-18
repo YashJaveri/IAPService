@@ -10,7 +10,7 @@ import { generatePdf } from './pdf-generator';
 
 
 export const jobGrace = new CronJob('* * * * *', async function () { //Change to normal after testing is done
-
+    console.log('Cron job grace started...')
     let users = await UserModel.find({})
     let dueDate = new Date(new Date().setDate(new Date().getDate() + 7))
 
