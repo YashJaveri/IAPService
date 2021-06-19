@@ -12,6 +12,8 @@ export const UserStatRoutes = Router()
 
 UserStatRoutes.use(VerifyUserToken())   //Auth custom middleware
 
+const fs = require("fs");
+
 UserStatRoutes.get('/', ErrorProtectedRoute(async (req: any, resp) => {
     let response: any = {
         all: [],
@@ -84,32 +86,36 @@ UserStatRoutes.get('/invoice', ErrorProtectedRoute(async (req: any, resp) => {
     } 
 
     let user = req.user
-
+    let dt = new Date()
     if (new Date().getMonth() === 0){
         var invoice = await getLatestInvoiceDetails(user, 11, new Date().getFullYear()-1)
     }else{
         
         var invoice = await getLatestInvoiceDetails(user, new Date().getMonth(), new Date().getFullYear())
     }
-    // if(invoice !== null){
+    console.log('Invoice', invoice)
+    if(invoice !== null){
     //     // TODO: getMonth()-1
-    //     var pdfData = await getCompleteUserStats(user, new Date().getMonth(), new Date().getFullYear())
-    //     Object.assign(pdfData, {
-    //         name: user.name,
-    //         email: user.email,
-    //         invoiceId: invoice?.invoiceDisplayId,
-    //         dueDate: new Date().toDateString(), 
-    //         currDate: new Date().toDateString(),
-    //         subTotal: invoice?.billDetails?.totalCount * constants.RATE_PER_REQUEST,
-    //         billedRequests: Math.max(0, invoice?.billDetails?.totalCount - constants.FREE_ALLOWANCE),
-    //         amountPayable: invoice?.amount,
-    //     })
-        
-    //     const pdf = await generatePdf(pdfData)
+        console.log('Inside if statement')
+        var pdfData = await getCompleteUserStats(user, new Date().getMonth(), new Date().getFullYear())
+        Object.assign(pdfData, {
+            name: user.name,
+            email: user.email,
+            invoiceId: invoice.invoiceDisplayId,
+            dueDate: new Date(dt.getFullYear(), dt.getMonth()-1, 7).toDateString(), 
+            currDate: new Date(dt.getFullYear(), dt.getMonth()-1, 1).toDateString(),
+            subTotal: invoice.billDetails?.totalCount * constants.RATE_PER_REQUEST,
+            billedRequests: Math.max(0, invoice?.billDetails?.totalCount - constants.FREE_ALLOWANCE),
+            amountPayable: invoice?.amount,
+        })
+        let pdf = await generatePdf(pdfData)
 
-        
-    // }
-    response.invoice = invoice
+        var file = fs.createReadStream("./src/pdfstorage/invoice.pdf");
+        // response.invoice = pdfData
+        file.pipe(resp);
 
-    resp.send(new ResponseData(response))
+    }else{
+        response.invoice = undefined
+        resp.send({})
+    } 
 }))

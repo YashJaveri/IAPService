@@ -29,7 +29,7 @@ export async function generatePdf(billData: any) {
         data: {
             bill: billData,
         },
-        path: "./src/pdfstorage/output.pdf",
+        path: "./src/pdfstorage/invoice.pdf",
         type: "",
     };
 
