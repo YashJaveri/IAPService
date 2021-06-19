@@ -3,8 +3,10 @@ import { VerifyUserToken } from '../middlewares/auth'
 import { UserStatModel } from '../models/user-stat'
 import ApiError from '../utils/api-error'
 import ErrorProtectedRoute from '../utils/error-protected-route'
-import { filterStatistics, getCompleteUserStats, getCountOfReqPerDay, getCountOfReqPerMonth, getPlatformWiseTotalCount } from '../utils/handle-stat-details'
+import { filterStatistics, getCompleteUserStats, getCountOfReqPerDay, getCountOfReqPerMonth, getPlatformWiseTotalCount, getLatestInvoiceDetails } from '../utils/handle-stat-details'
+import { generatePdf } from '../utils/pdf-generator'
 import { ResponseData } from '../utils/response'
+import { constants } from '../utils/constants'
 
 export const UserStatRoutes = Router()
 
@@ -22,7 +24,8 @@ UserStatRoutes.get('/', ErrorProtectedRoute(async (req: any, resp) => {
         amazonCount: 0,
         googleCount: 0,
         appleCount: 0,
-        totalCount: 0
+        totalCount: 0,
+       
     }
 
     let user = req.user
@@ -71,6 +74,42 @@ UserStatRoutes.get('/', ErrorProtectedRoute(async (req: any, resp) => {
         response.packageWise.push(filterStatistics(completeUserStatData, 'apple', packageName)[0])
         response.packageWise.push(filterStatistics(completeUserStatData, 'amazon', packageName)[0])
     }
+    
+    resp.send(new ResponseData(response))
+}))
+
+UserStatRoutes.get('/invoice', ErrorProtectedRoute(async (req: any, resp) => {
+    let response:any = {
+        invoice: {}
+    } 
+
+    let user = req.user
+
+    if (new Date().getMonth() === 0){
+        var invoice = await getLatestInvoiceDetails(user, 11, new Date().getFullYear()-1)
+    }else{
+        
+        var invoice = await getLatestInvoiceDetails(user, new Date().getMonth(), new Date().getFullYear())
+    }
+    // if(invoice !== null){
+    //     // TODO: getMonth()-1
+    //     var pdfData = await getCompleteUserStats(user, new Date().getMonth(), new Date().getFullYear())
+    //     Object.assign(pdfData, {
+    //         name: user.name,
+    //         email: user.email,
+    //         invoiceId: invoice?.invoiceDisplayId,
+    //         dueDate: new Date().toDateString(), 
+    //         currDate: new Date().toDateString(),
+    //         subTotal: invoice?.billDetails?.totalCount * constants.RATE_PER_REQUEST,
+    //         billedRequests: Math.max(0, invoice?.billDetails?.totalCount - constants.FREE_ALLOWANCE),
+    //         amountPayable: invoice?.amount,
+    //     })
+        
+    //     const pdf = await generatePdf(pdfData)
+
+        
+    // }
+    response.invoice = invoice
 
     resp.send(new ResponseData(response))
 }))

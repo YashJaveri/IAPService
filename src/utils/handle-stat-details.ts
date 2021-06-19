@@ -1,6 +1,7 @@
 import { IUserStat, UserStatModel } from "../models/user-stat";
 import { IUser } from "../models/user"
 import { constants } from "./constants";
+import { InvoiceModel } from "../models/invoice";
 
 export async function getCountOfReqPerMonth(userStat: any, month: number, year:number) {
     if(!userStat){
@@ -122,6 +123,16 @@ export function getPlatformWiseTotalCount(platformDetails: any) {
     }
 
     return totalCount
+}
+
+export async function getLatestInvoiceDetails(user: IUser, month: number, year: number) {
+    var invoice = await InvoiceModel.findOne({userId: user._id, createdAt: {
+        // TODO: add 1 in place of 15 and 2 in place of 16
+        $gte: new Date(year, month, 15), 
+        $lte: new Date(year, month, 16)
+    } })
+    
+    return invoice
 }
 
 export function filterStatistics(billDetails: any, platf:string = "", packageName:string = ""){

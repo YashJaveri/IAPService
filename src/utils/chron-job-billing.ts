@@ -20,9 +20,10 @@ export const jobBill = new CronJob('* * * * *', async function () { //Change to 
     for (const user of users) {
         if (new Date().getMonth() === 0)
             var pdfData = await getCompleteUserStats(user, 11, new Date().getFullYear() - 1)
-        else
-            var pdfData = await getCompleteUserStats(user, new Date().getMonth() - 1, new Date().getFullYear())
-        
+        else{
+            // TODO: getMonth()-1
+            var pdfData = await getCompleteUserStats(user, new Date().getMonth(), new Date().getFullYear())
+        }
         // console.log('got complete user stats')
 
         let amountPayable = Math.max(0, pdfData.totalCount - constants.FREE_ALLOWANCE) * constants.RATE_PER_REQUEST
