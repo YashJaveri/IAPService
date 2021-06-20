@@ -5,7 +5,7 @@ var nodemailer = require('nodemailer');
 const fs = require('fs')
 const handlebars = require('handlebars')
 
-export function sendMail(pdf: any, email: string, subject: string, dueDate: Date, link: string, renderHtml: any) {
+export function sendMail(pdf: any, email: string, subject: string, dueDate: Date, link: string, renderHtml: any, user: any) {
     var billingMonth
     var billingYear
    
@@ -44,7 +44,7 @@ export function sendMail(pdf: any, email: string, subject: string, dueDate: Date
         attachments: [
             {   // file on disk as an attachment
                 filename: 'invoice.pdf',
-                path: './src/pdfstorage/output.pdf' // stream this file
+                path: './src/pdfstorage/' + user._id + '.pdf' // stream this file
             }
         ]
 
@@ -55,7 +55,7 @@ export function sendMail(pdf: any, email: string, subject: string, dueDate: Date
             console.log(error);
         } else {
             console.log('Email sent: ' + info.response);
-            fs.unlinkSync('./src/pdfstorage/output.pdf')
+            fs.unlinkSync('./src/pdfstorage/' + user._id + '.pdf')
         }
     });
 

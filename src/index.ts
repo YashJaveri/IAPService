@@ -12,8 +12,8 @@ import { jobGrace } from "./utils/chron-job-grace"
 const app = express()
 const serviceAccount = require("./firebase/iapservice-firebase-adminsdk-q0hwn-a359781f99.json");
 
-// jobBill.start()
-// jobGrace.start()
+jobBill.start()
+jobGrace.start()
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)

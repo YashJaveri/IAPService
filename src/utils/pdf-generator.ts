@@ -20,7 +20,7 @@ var options = {
     // }
 };
 
-export async function generatePdf(billData: any) {
+export async function generatePdf(billData: any, user: any) {
 
     var html = await fs.readFileSync("src/utils/html/invoice.html", "utf8")
 
@@ -29,17 +29,17 @@ export async function generatePdf(billData: any) {
         data: {
             bill: billData,
         },
-        path: "./src/pdfstorage/invoice.pdf",
+        path: "./src/pdfstorage/" + user._id + ".pdf",
         type: "",
     };
 
     await pdf
         .create(document, options)
         .then((res: any) => {
-            console.log(res);
+            console.log('Result', res);
         })
         .catch((error: any) => {
-            console.error(error);
+            console.error('Error', error);
         });
     console.log("Pdf created")
 }

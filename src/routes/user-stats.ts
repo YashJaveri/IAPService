@@ -108,12 +108,13 @@ UserStatRoutes.get('/invoice', ErrorProtectedRoute(async (req: any, resp) => {
             billedRequests: Math.max(0, invoice?.billDetails?.totalCount - constants.FREE_ALLOWANCE),
             amountPayable: invoice?.amount,
         })
-        let pdf = await generatePdf(pdfData)
+        let pdf = await generatePdf(pdfData, user)
 
-        var file = fs.createReadStream("./src/pdfstorage/invoice.pdf");
+        var file = fs.createReadStream("./src/pdfstorage/" + user._id + ".pdf");
         // response.invoice = pdfData
         file.pipe(resp);
 
+        fs.unlinkSync("./src/pdfstorage/" + user._id + ".pdf");
     }else{
         response.invoice = undefined
         resp.send({})

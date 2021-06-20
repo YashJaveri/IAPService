@@ -13,6 +13,7 @@ import { generatePdf } from './pdf-generator';
 
 export const jobBill = new CronJob('* * * * *', async function () { //Change to normal after testing is done
     console.log('Cron job billing started...')
+    const fs = require('fs')
     let users = await UserModel.find({})
     let dueDate = new Date(new Date().setDate(new Date().getDate() + 7))
     // console.log('Users found')
@@ -56,8 +57,9 @@ export const jobBill = new CronJob('* * * * *', async function () { //Change to 
                 amountPayable: amountPayable,
             })
 
-            let pdf = await generatePdf(pdfData)
-            sendMail(pdf, user.email, "Test Mail", dueDate, "www.google.com", invoiceMailHtml)   //Add content 
+            let pdf = await generatePdf(pdfData, user)
+            await sendMail(pdf, user.email, "Test Mail", dueDate, "www.google.com", invoiceMailHtml, user)   //Add content 
+            //fs.unlinkSync("./src/pdfstorage/" + user._id + ".pdf");
         }
     }
 }, null, true, 'Asia/Kolkata');

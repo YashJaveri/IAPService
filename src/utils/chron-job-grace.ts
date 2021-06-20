@@ -11,6 +11,7 @@ import { generatePdf } from './pdf-generator';
 
 export const jobGrace = new CronJob('* * * * *', async function () { //Change to normal after testing is done
     console.log('Cron job grace started...')
+    const fs = require('fs')
     let users = await UserModel.find({})
     let dueDate = new Date(new Date().setDate(new Date().getDate() + 7))
 
@@ -32,9 +33,9 @@ export const jobGrace = new CronJob('* * * * *', async function () { //Change to
             })
 
             console.log("Cron grace running...")
-            let pdf = await generatePdf(pdfData)
-            sendMail(pdf, user.email, "Test Mail", dueDate, "www.google.com", invoiceDueMailHtml) 
-            
+            let pdf = await generatePdf(pdfData, user)
+            sendMail(pdf, user.email, "Test Mail", dueDate, "www.google.com", invoiceDueMailHtml, user) 
+            //fs.unlinkSync("./src/pdfstorage/" + user._id + ".pdf");
             user.disabled = true
             await user.save()
         }
