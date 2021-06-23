@@ -100,7 +100,7 @@ export async function getCompleteUserStats(user: IUser, month: number, year:numb
                 platform: key.split(' ')[0],
                 appId: key.split(' ')[1],
                 count: value,
-                totalPrice: value*constants.RATE_PER_REQUEST
+                totalPrice: Math.round(value*constants.RATE_PER_REQUEST*100) / 100
             }
             stats.push(obj)
         }        
