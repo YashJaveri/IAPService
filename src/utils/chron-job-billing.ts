@@ -32,7 +32,7 @@ export const jobBill = new CronJob('* * * * *', async function () { //Change to 
         // console.log('Amount Payable', amountPayable)
 
         if (amountPayable > 0) {
-            // let prevInvoice = await InvoiceModel.findOne({}, {}, {sort: { 'created_at':-1}})
+            //logic to generate bill display id
             let prevInvoice = await InvoiceModel.findOne().sort({createdAt: -1})
 
             var invoiceId=-1
@@ -59,7 +59,7 @@ export const jobBill = new CronJob('* * * * *', async function () { //Change to 
 
             let pdf = await generatePdf(pdfData, user)
             await sendMail(pdf, user.email, "Test Mail", dueDate, "www.google.com", invoiceMailHtml, user)   //Add content 
-            //fs.unlinkSync("./src/pdfstorage/" + user._id + ".pdf");
+
         }
     }
 }, null, true, 'Asia/Kolkata');

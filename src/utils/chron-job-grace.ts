@@ -17,7 +17,7 @@ export const jobGrace = new CronJob('* * * * *', async function () { //Change to
 
     for (const user of users) {
         let invoice = await InvoiceModel.findOne({ userId: user._id}, {}, {sort: {'created_at':-1}})
-        
+        console.log('Invoice Grace ' + JSON.stringify(invoice) + ' ' + user.email)
         if(invoice && !invoice?.paid){
             var pdfData = invoice.billDetails
 

@@ -3,7 +3,7 @@ import { VerifyUserToken } from '../middlewares/auth'
 import { UserStatModel } from '../models/user-stat'
 import ApiError from '../utils/api-error'
 import ErrorProtectedRoute from '../utils/error-protected-route'
-import { filterStatistics, getCompleteUserStats, getCountOfReqPerDay, getCountOfReqPerMonth, getPlatformWiseTotalCount, getLatestInvoiceDetails } from '../utils/handle-stat-details'
+import { filterStatistics, getCompleteUserStats, getCountOfReqPerDay, getCountOfReqPerMonth, getPlatformWiseTotalCount, getLatestInvoiceDetails, getCompleteInvoiceObject } from '../utils/handle-stat-details'
 import { generatePdf } from '../utils/pdf-generator'
 import { ResponseData } from '../utils/response'
 import { constants } from '../utils/constants'
@@ -80,43 +80,57 @@ UserStatRoutes.get('/', ErrorProtectedRoute(async (req: any, resp) => {
     resp.send(new ResponseData(response))
 }))
 
-UserStatRoutes.get('/invoice', ErrorProtectedRoute(async (req: any, resp) => {
+UserStatRoutes.get('/invoice-pdf', ErrorProtectedRoute(async (req: any, resp) => {
     let response:any = {
         invoice: {}
     } 
 
     let user = req.user
     let dt = new Date()
-    if (new Date().getMonth() === 0){
+
+    if (new Date().getMonth() === 0)
         var invoice = await getLatestInvoiceDetails(user, 11, new Date().getFullYear()-1)
-    }else{
-        
+    else
         var invoice = await getLatestInvoiceDetails(user, new Date().getMonth(), new Date().getFullYear())
-    }
-    console.log('Invoice', invoice)
+    
     if(invoice !== null){
-    //     // TODO: getMonth()-1
-        console.log('Inside if statement')
-        var pdfData = await getCompleteUserStats(user, new Date().getMonth(), new Date().getFullYear())
-        Object.assign(pdfData, {
-            name: user.name,
-            email: user.email,
-            invoiceId: invoice.invoiceDisplayId,
-            dueDate: new Date(dt.getFullYear(), dt.getMonth()-1, 7).toDateString(), 
-            currDate: new Date(dt.getFullYear(), dt.getMonth()-1, 1).toDateString(),
-            subTotal: invoice.billDetails?.totalCount * constants.RATE_PER_REQUEST,
-            billedRequests: Math.max(0, invoice?.billDetails?.totalCount - constants.FREE_ALLOWANCE),
-            amountPayable: invoice?.amount,
-        })
+        var pdfData = await getCompleteInvoiceObject(user, invoice)
         let pdf = await generatePdf(pdfData, user)
 
         var file = fs.createReadStream("./src/pdfstorage/" + user._id + ".pdf");
-        // response.invoice = pdfData
+        
         file.pipe(resp);
 
         fs.unlinkSync("./src/pdfstorage/" + user._id + ".pdf");
     }else{
         response.invoice = undefined
         resp.send({})
+    } 
+}))
+
+UserStatRoutes.get('/invoice', ErrorProtectedRoute(async (req: any, resp) => {
+    let response:any = {
+        invoice: null,
+        paid: false
+    } 
+
+    let user = req.user
+    let dt = new Date()
+
+    if (new Date().getMonth() === 0)
+        var invoice = await getLatestInvoiceDetails(user, 11, new Date().getFullYear()-1)
+    else
+        var invoice = await getLatestInvoiceDetails(user, new Date().getMonth(), new Date().getFullYear())
+
+    if(invoice !== null){
+        var isPaid = invoice.paid
+        var pdfData = await getCompleteInvoiceObject(user, invoice)
+
+        response.invoice = pdfData
+        response.paid = isPaid
+
+        resp.send(new ResponseData(response))
+    }else{
+        resp.send(new ResponseData(response))
     } 
 }))
