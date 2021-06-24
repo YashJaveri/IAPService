@@ -81,10 +81,6 @@ UserStatRoutes.get('/', ErrorProtectedRoute(async (req: any, resp) => {
 }))
 
 UserStatRoutes.get('/invoice-pdf', ErrorProtectedRoute(async (req: any, resp) => {
-    let response:any = {
-        invoice: {}
-    } 
-
     let user = req.user
     let dt = new Date()
 
@@ -98,12 +94,17 @@ UserStatRoutes.get('/invoice-pdf', ErrorProtectedRoute(async (req: any, resp) =>
         let pdf = await generatePdf(pdfData, user)
 
         var file = fs.createReadStream("./src/pdfstorage/" + user._id + ".pdf");
-        
+        file.on('end', ()=>{
+            file.destroy()
+        })
         file.pipe(resp);
 
-        fs.unlinkSync("./src/pdfstorage/" + user._id + ".pdf");
+        // setTimeout(()=>{
+            fs.unlinkSync("./src/pdfstorage/" + user._id + ".pdf");
+        
+        // },5000)
+        
     }else{
-        response.invoice = undefined
         resp.send({})
     } 
 }))
